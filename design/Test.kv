@@ -1,0 +1,98 @@
+#: kivy 1.9
+#: import ScreenManager kivy.uix.screenmanager.ScreenManager
+#: import Screen kivy.uix.screenmanager.ScreenManager
+#: import MenuScreen screen
+#: import SettingsScreen screen
+
+ScreenManager:
+    id: screen_manager
+    MenuScreen:
+        id: menu_screen
+        name: 'MenuScreen'
+        manager: 'screen_manager'
+    SettingsScreen:
+        id: settings_screen
+        name: 'SettingsScreen'
+        manager: 'screen_manager'
+
+<MenuScreen>:
+    BoxLayout:
+        canvas:
+            Color:
+                rgb: 1, 1, 1
+            Rectangle:
+                size: root.size
+        orientation: 'vertical'
+        KivyCamera:
+            id: qrcam
+        Button:
+            id: butt_start
+            text: "start"
+            size_hint_y: None
+            height: '48dp'
+            on_press: root.dostart()
+        Button:
+            id: butt_exit
+            text: "stop"
+            size_hint_y: None
+            height: '48dp'
+            on_press: root.doexit()
+        Button:
+            text: 'Settings'
+            size_hint_y: None
+            height: '48dp'
+            on_press: app.root.current = 'SettingsScreen'
+
+<SettingsCheckBox@CheckBox>:
+    color: 0, 0, 0, 1
+    size_hint: 0.15, 1
+<SettingsLabel@ButtonBehavior+Label>:
+    text_size: self.size
+    valign: 'center'
+    font_size: '13sp'
+    color: 0, 0, 0, 1
+<SettingsLabelCheckBox@BoxLayout>:
+    text: ''
+    group: ''
+    SettingsCheckBox:
+        id: cb
+        group: root.group
+    SettingsLabel:
+        on_press: cb._do_press()
+        text: root.text
+
+<SettingsScreen>:
+    BoxLayout:
+        canvas:
+            Color:
+                rgb: 1, 1, 1
+            Rectangle:
+                size: root.size
+        orientation: 'vertical'
+        SettingsLabelCheckBox
+            orientation: 'horizontal'
+            text:"option 1"
+            group: 'opts'
+            font_size:30
+        SettingsLabelCheckBox:
+            orientation: 'horizontal'
+            text:"option 2"
+            group: 'opts'
+            font_size:30
+        SettingsLabelCheckBox:
+            orientation: 'horizontal'
+            text:"option 3"
+            group: 'opts'
+            font_size:30
+        SettingsLabelCheckBox:
+            orientation: 'horizontal'
+            text:"option 4"
+            group: 'opts'
+            font_size:30
+
+
+        Button:
+            text: 'Back to menu'
+            size_hint_y: None
+            height: '48dp'
+            on_press: app.root.current = 'MenuScreen'
