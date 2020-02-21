@@ -14,6 +14,7 @@ from kivy.graphics.texture import Texture
 from kivy.core.window import Window
 import os
 import sys
+import Builder as builder
 
 
 
@@ -21,6 +22,8 @@ class KivyCamera(Image):
     def __init__(self, **kwargs):
         super(KivyCamera, self).__init__(**kwargs)
         self.capture = None
+        self.builder = builder.FaceDetBuilder()
+        self.director = builder.Director(self.builder)
 
     def start(self, capture, fps=60):
         self.capture = capture
@@ -38,6 +41,7 @@ class KivyCamera(Image):
             if not texture or texture.width != w or texture.height != h:
                 self.texture = texture = Texture.create(size=(w, h))
                 texture.flip_vertical()
+            self.director.buildAllDet(frame)
             texture.blit_buffer(frame.tobytes(), colorfmt='bgr')
             self.canvas.ask_update()
 capture = None
@@ -56,8 +60,9 @@ class MenuScreen(Screen):
         if capture != None:
             capture.release()
             capture = None
-            python = sys.executable
-            os.execl(python, python, * sys.argv)
+            App.get_running_app().stop()
+            # python = sys.executable
+            # os.execl(python, python, * sys.argv)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -68,9 +73,6 @@ class MenuScreen(Screen):
         return platform == 'android'
 
     def _request_android_permissions(self):
-        """
-        Requests CAMERA permission on Android.
-        """
         if not self.is_android():
             return
         from android.permissions import request_permission, Permission
@@ -83,7 +85,6 @@ class SettingsScreen(Screen):
 class ScreenManager(ScreenManager):
     pass
 
-#designedbymattakyshi
 buildKV = Builder.load_file("Test.kv")
 class TestApp(App):
     def build(self):
