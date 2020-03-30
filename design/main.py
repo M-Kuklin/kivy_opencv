@@ -80,7 +80,22 @@ class MenuScreen(Screen):
 
 
 class SettingsScreen(Screen):
-    pass
+    def checkbox_click1(self, instance, value):
+        if value is True:
+            print("Checkbox1 Checked")
+        else:
+            print("Checkbox1 Unchecked")
+    def checkbox_click2(self, instance, value):
+        if value is True:
+            print("Checkbox2 Checked")
+        else:
+            print("Checkbox2 Unchecked")
+    def checkbox_click3(self, instance, value):
+        if value is True:
+            print("Checkbox3 Checked")
+        else:
+            print("Checkbox3 Unchecked")
+
 
 class ScreenManager(ScreenManager):
     pass

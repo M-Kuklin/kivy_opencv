@@ -3,8 +3,7 @@
 #: import Screen kivy.uix.screenmanager.ScreenManager
 #: import MenuScreen screen
 #: import SettingsScreen screen
-<CustLabel@Label>:
-    color: .761, .190, .810, 1
+
 ScreenManager:
     id: screen_manager
     MenuScreen:
@@ -45,40 +44,47 @@ ScreenManager:
             height: '48dp'
             on_press: app.root.current = 'SettingsScreen'
 
+<SettingsCheckBox@CheckBox>:
+    color: 0, 0, 0, 1
+    size_hint: 0.15, 1
+<SettingsLabel@ButtonBehavior+Label>:
+    text_size: self.size
+    valign: 'center'
+    font_size: '13sp'
+    color: 0, 0, 0, 1
+<SettingsLabelCheckBox@BoxLayout>:
+    text: ''
+    group: ''
+    SettingsCheckBox:
+        id: cb
+        group: root.group
+    SettingsLabel:
+        on_press: cb._do_press()
+        text: root.text
 
 <SettingsScreen>:
-    orientation: "vertical"
-    padding: 10
-    spacing: 10
-
     BoxLayout:
-        orientation: "vertical"
-        height: 20
-        CustLabel:
-            text: "Option1"
-            size_hint_x: .40
-            font_size:20
-        CheckBox:
-            color:.294, .761, .623
-            on_active: root.checkbox_click1(self, self.active)
-            size_hint_x: .40
-        CustLabel:
-            text: "Option2"
-            size_hint_x: .40
-            font_size:20
-        CheckBox:
-            color:.294, .761, .623
-            on_active: root.checkbox_click2(self, self.active)
-            size_hint_x: .40
-        CustLabel:
-            text: "Option3"
-            size_hint_x: .40
-            font_size:20
-        CheckBox:
-            color:.294, .761, .623
-            on_active: root.checkbox_click3(self, self.active)
-            size_hint_x: .40
-
+        canvas:
+            Color:
+                rgb: 1, 1, 1
+            Rectangle:
+                size: root.size
+        orientation: 'vertical'
+        SettingsLabelCheckBox
+            orientation: 'horizontal'
+            text:"option 1"
+            group: 'opts'
+            font_size:30
+        SettingsLabelCheckBox:
+            orientation: 'horizontal'
+            text:"option 2"
+            group: 'opts'
+            font_size:30
+        SettingsLabelCheckBox:
+            orientation: 'horizontal'
+            text:"option 3"
+            group: 'opts'
+            font_size:30
 
 
 
