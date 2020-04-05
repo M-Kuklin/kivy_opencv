@@ -14,19 +14,58 @@ class Director:
             self._ip.drawRect(img, coord)
 
     def buildAgeDet(self, img):
-        pass
+        gray = self._ip.grayScale(img)
+        faces = self._builder.getDetector(gray)
+        if len(faces) > 0:
+            coords = self._builder.buildFacePredictor(faces)
+            age = self._builder.buildAgePredictor(faces, img, self._models[0])
+            for i in range(len(coords)):
+                text = f"Age:{age[i]}"
+                self._ip.putText(img, text, coords[i][0], coords[i][1] + 50)
 
     def buildGenderDet(self, img):
-        pass
+        gray = self._ip.grayScale(img)
+        faces = self._builder.getDetector(gray)
+        if len(faces) > 0:
+            coords = self._builder.buildFacePredictor(faces)
+            gender = self._builder.buildGenderPredictor(faces, img, self._models[1])
+            for i in range(len(coords)):
+                text = f"{gender[i]}"
+                self._ip.putText(img, text, coords[i][0], coords[i][1] + 50)
+
 
     def buildFaceGendDet(self, img):
-        pass
+        gray = self._ip.grayScale(img)
+        faces = self._builder.getDetector(gray)
+        if len(faces) > 0:
+            coords = self._builder.buildFacePredictor(faces)
+            gender = self._builder.buildGenderPredictor(faces, img, self._models[1])
+            for i in range(len(coords)):
+                text = f"{gender[i]}"
+                self._ip.drawRect(img, coords[i])
+                self._ip.putText(img, text, coords[i][0], coords[i][1] + 50)
 
     def buildAgeGendDet(self, img):
-        pass
+        gray = self._ip.grayScale(img)
+        faces = self._builder.getDetector(gray)
+        if len(faces) > 0:
+            coords = self._builder.buildFacePredictor(faces)
+            gender = self._builder.buildGenderPredictor(faces, img, self._models[1])
+            age = self._builder.buildAgePredictor(faces, img, self._models[0])
+            for i in range(len(coords)):
+                text = f"Age:{age[i]}, {gender[i]}"
+                self._ip.putText(img, text, coords[i][0], coords[i][1] + 50)
 
     def buildFaceAgeDet(self, img):
-        pass
+        gray = self._ip.grayScale(img)
+        faces = self._builder.getDetector(gray)
+        if len(faces) > 0:
+            coords = self._builder.buildFacePredictor(faces)
+            age = self._builder.buildAgePredictor(faces, img, self._models[0])
+            for i in range(len(coords)):
+                text = f"Age:{age[i]}"
+                self._ip.drawRect(img, coords[i])
+                self._ip.putText(img, text, coords[i][0], coords[i][1] + 50)
 
     def buildAllDet(self, img):
         gray = self._ip.grayScale(img)

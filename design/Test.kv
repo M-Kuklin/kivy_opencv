@@ -44,6 +44,11 @@ ScreenManager:
             size_hint_y: None
             height: '48dp'
             on_press: app.root.current = 'SettingsScreen'
+        Button:
+            text: 'Exit'
+            size_hint_y: None
+            height: '48dp'
+            on_press: root.closeApp()
 
 
 <SettingsScreen>:
@@ -57,7 +62,7 @@ ScreenManager:
         CustLabel:
             text: "Option1"
             size_hint_x: .40
-            font_size:20
+            font_size:16
         CheckBox:
             color:.294, .761, .623
             on_active: root.checkbox_click1(self, self.active)
@@ -65,7 +70,7 @@ ScreenManager:
         CustLabel:
             text: "Option2"
             size_hint_x: .40
-            font_size:20
+            font_size:16
         CheckBox:
             color:.294, .761, .623
             on_active: root.checkbox_click2(self, self.active)
@@ -73,7 +78,7 @@ ScreenManager:
         CustLabel:
             text: "Option3"
             size_hint_x: .40
-            font_size:20
+            font_size:16
         CheckBox:
             color:.294, .761, .623
             on_active: root.checkbox_click3(self, self.active)

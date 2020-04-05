@@ -17,6 +17,11 @@ import sys
 import Builder as builder
 
 
+class States:
+    isFace = False
+    isGender = False
+    isAge = False
+    isRelease = False
 
 class KivyCamera(Image):
     def __init__(self, **kwargs):
@@ -30,20 +35,39 @@ class KivyCamera(Image):
         Clock.schedule_interval(self.update, 1.0 / fps)
 
     def stop(self):
-        Clock.unschedule_interval(self.update)
+        Clock.unschedule(self.update)
+        self.capture.release()
         self.capture = None
+        States.isRelease = False
 
     def update(self, dt):
-        return_value, frame = self.capture.read()
-        if return_value:
-            texture = self.texture
-            w, h = frame.shape[1], frame.shape[0]
-            if not texture or texture.width != w or texture.height != h:
-                self.texture = texture = Texture.create(size=(w, h))
-                texture.flip_vertical()
-            self.director.buildAllDet(frame)
-            texture.blit_buffer(frame.tobytes(), colorfmt='bgr')
-            self.canvas.ask_update()
+        if States.isRelease:
+            self.stop()
+        else:
+            return_value, frame = self.capture.read()
+            if return_value:
+                w, h = frame.shape[1], frame.shape[0]
+                if not self.texture or self.texture.width != w or self.texture.height != h:
+                    self.texture = Texture.create(size=(w, h))
+                    self.texture.flip_vertical()
+                if (States.isFace is False and States.isGender is False and States.isAge is False) or (States.isFace is True and States.isGender is True and States.isAge is True):
+                    self.director.buildAllDet(frame)
+                elif States.isFace is True and States.isGender is False and States.isAge is False:
+                    self.director.buildFaceDet(frame)
+                elif States.isFace is True and States.isGender is True and States.isAge is False:
+                    self.director.buildFaceGendDet(frame)
+                elif States.isFace is True and States.isGender is False and States.isAge is True:
+                    self.director.buildFaceAgeDet(frame)
+                elif States.isFace is False and States.isGender is False and States.isAge is True:
+                    self.director.buildAgeDet(frame)
+                elif States.isFace is False and States.isGender is True and States.isAge is False:
+                    self.director.buildGendDet(frame)
+                elif States.isFace is False and States.isGender is True and States.isAge is False:
+                    self.director.buildGendDet(frame)
+                elif States.isFace is False and States.isGender is True and States.isAge is True:
+                    self.director.buildAgeGendDet(frame)
+                self.texture.blit_buffer(frame.tobytes(), colorfmt='bgr')
+                self.canvas.ask_update()
 capture = None
 
 class MenuScreen(Screen):
@@ -56,17 +80,16 @@ class MenuScreen(Screen):
         self.ids.qrcam.start(capture)
 
     def doexit(self):
-        global capture
-        if capture != None:
-            capture.release()
-            capture = None
-            App.get_running_app().stop()
-            # python = sys.executable
-            # os.execl(python, python, * sys.argv)
+        States.isRelease = True
+
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._request_android_permissions()
+
+    def closeApp(self):
+        App.get_running_app().stop()
+
 
     @staticmethod
     def is_android():
@@ -83,18 +106,24 @@ class SettingsScreen(Screen):
     def checkbox_click1(self, instance, value):
         if value is True:
             print("Checkbox1 Checked")
+            States.isFace = True
         else:
             print("Checkbox1 Unchecked")
+            States.isFace = False
     def checkbox_click2(self, instance, value):
         if value is True:
             print("Checkbox2 Checked")
+            States.isGender = True
         else:
             print("Checkbox2 Unchecked")
+            States.isGender = False
     def checkbox_click3(self, instance, value):
         if value is True:
             print("Checkbox3 Checked")
+            States.isAge = True
         else:
             print("Checkbox3 Unchecked")
+            States.isAge = False
 
 
 class ScreenManager(ScreenManager):
